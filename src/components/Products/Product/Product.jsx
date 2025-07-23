@@ -3,15 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 const Product = ({ id, data }) => {
   const navigate = useNavigate();
+
   return (
     <div className="product-card" onClick={() => navigate("/product/" + id)}>
       <div className="thumbnail">
         <img
-          src={
-            process.env.REACT_APP_STRIPE_APP_DEV_URL +
-            data?.img?.data[0].attributes.url
-          }
-          alt=""
+          src={data?.image_url || "/placeholder.jpg"}
+          alt={data?.title || "Product"}
+          loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/placeholder.jpg";
+          }}
         />
       </div>
       <div className="prod-details">

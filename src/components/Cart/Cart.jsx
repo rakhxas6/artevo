@@ -1,35 +1,27 @@
-import { MdClose } from "react-icons/md";
 import { BsCartX } from "react-icons/bs";
-
-import CartItem from "../Cart/CartItem/CartItem";
-
+import { MdClose } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import "./Cart.scss";
+
 import { useContext } from "react";
 import { Context } from "../../utils/context";
-
-import { loadStripe } from "@stripe/stripe-js";
-import { makePaymentRequest } from "../../utils/api";
+import CartItem from "../Cart/CartItem/CartItem";
 
 const Cart = ({ setShowCart }) => {
   const { cartItems, cartSubTotal } = useContext(Context);
-  const stripePromise = loadStripe(
-    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
-  );
+  const navigate = useNavigate();
 
-  const handlePayment = async () => {
-    try {
-      const stripe = await stripePromise;
-      const res = await makePaymentRequest.post("/api/orders", {
-        products: cartItems,
-      });
-
-      await stripe.redirectToCheckout({
-        sessionId: res.data.stripeSession.id,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  const handleReturnToShop = () => {
+    setShowCart(false);
+    navigate("/");
   };
+
+  const handlePayment = () => {
+    setShowCart(false);
+    navigate("/payment-pending");
+  };
+
+  
 
   return (
     <div className="cart-panel">
@@ -46,7 +38,9 @@ const Cart = ({ setShowCart }) => {
           <div className="empty-cart">
             <BsCartX />
             <span>No products in the cart.</span>
-            <button className="return-cta">RETURN TO SHOP</button>
+            <button onClick={handleReturnToShop} className="return-cta">
+              RETURN TO SHOP
+            </button>
           </div>
         )}
 
@@ -63,6 +57,7 @@ const Cart = ({ setShowCart }) => {
                   Checkout
                 </button>
               </div>
+              
             </div>
           </>
         )}

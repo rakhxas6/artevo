@@ -1,19 +1,12 @@
 import axios from "axios";
 
-// const params = {
-//   headers: {
-//     Authorization: "bearer " + process.env.REACT_APP_STRIPE_APP_KEY,
-//   },
-// };
+const params = {
+  headers: {
+    Authorization: "bearer " + process.env.REACT_APP_STRIPE_APP_KEY,
+  },
+};
 
-export const fetchDataFromApi = async (
-  url,
-  extraParams = {
-    headers: {
-      Authorization: "bearer " + process.env.REACT_APP_STRIPE_APP_KEY,
-    },
-  }
-) => {
+export const fetchDataFromApi = async (url) => {
   try {
     const { data } = await axios.get(
       process.env.REACT_APP_STRIPE_APP_DEV_URL + url,
@@ -22,7 +15,7 @@ export const fetchDataFromApi = async (
           Authorization: "bearer " + process.env.REACT_APP_STRIPE_APP_KEY,
         },
         timeout: 10000,
-        params: extraParams,
+        params
       }
     );
     return data;

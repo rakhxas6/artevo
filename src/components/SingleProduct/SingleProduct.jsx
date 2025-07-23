@@ -1,6 +1,5 @@
-import useFetch from "../../hooks/useFetch";
-import { useParams } from "react-router-dom";
 import { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 import { Context } from "../../utils/context";
 import RelatedProducts from "./RelatedProducts/RelatedProducts";
 
@@ -14,41 +13,32 @@ import {
 } from "react-icons/fa";
 import "./SingleProduct.scss";
 
-const SingleProduct = ({ innerPage }) => {
-  const [quantity, setQuantity] = useState(1);
-  const { handleAddToCart } = useContext(Context);
+const SingleProduct = () => {
   const { id } = useParams();
-  const { data } = useFetch(`/api/products?populate=*&[filters][id]=${id}`);
+  const [quantity, setQuantity] = useState(1);
+  const { products, handleAddToCart, categories } = useContext(Context);
+  const product = products.find((p) => p.id === Number(id));
 
-  const increment = () => {
-    setQuantity((prevState) => prevState + 1);
-  };
-  const decrement = () => {
-    setQuantity((prevState) => {
-      if (prevState === 1) return 1;
-      return prevState - 1;
-    });
-  };
+  if (!product) return <div>Loading product...</div>;
 
-  if (!data) return;
-  const product = data.data[0].attributes;
+  const imageUrl = product.image_url || "/placeholder.jpg";
+  const category = categories.find((cat) => cat.id === product.category_id);
+
+  const increment = () => setQuantity((q) => q + 1);
+  const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+
   return (
     <div className="single-product-main-content">
       <div className="layout">
         <div className="single-product-page">
           <div className="left">
-            <img
-              src={
-                process.env.REACT_APP_STRIPE_APP_DEV_URL +
-                product.img.data[0].attributes.url
-              }
-              alt=""
-            />
+            <img src={imageUrl} alt={product.title || "Product Image"} />
           </div>
           <div className="right">
             <span className="name">{product.title}</span>
             <span className="price">&#8377;{product.price}</span>
             <span className="desc">{product.desc}</span>
+
             <div className="cart-buttons">
               <div className="quantity-buttons">
                 <span onClick={decrement}>-</span>
@@ -58,7 +48,7 @@ const SingleProduct = ({ innerPage }) => {
               <button
                 className="add-to-cart-button"
                 onClick={() => {
-                  handleAddToCart(data?.data?.[0], quantity);
+                  handleAddToCart(product, quantity);
                   setQuantity(1);
                 }}
               >
@@ -70,8 +60,7 @@ const SingleProduct = ({ innerPage }) => {
             <span className="divider" />
             <div className="info-item">
               <span className="text-bold">
-                Category:
-                <span> {product.categories.data[0].attributes.title}</span>
+                Category: <span>{category?.title || "Unknown Category"}</span>
               </span>
               <span className="text-bold">
                 Share:
@@ -86,10 +75,7 @@ const SingleProduct = ({ innerPage }) => {
             </div>
           </div>
         </div>
-        <RelatedProducts
-          productId={id}
-          categoryId={product.categories.data[0].id}
-        />
+        <RelatedProducts productId={id} categoryId={product.category_id} />
       </div>
     </div>
   );
