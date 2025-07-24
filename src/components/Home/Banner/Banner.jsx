@@ -28,7 +28,7 @@ const Banner = () => {
               Read More
             </div>
             <div className="banner-cta v2" onClick={scrollDownToProducts}>
-              Show Now
+              Shop Now
             </div>
           </div>
         </div>
