@@ -10,14 +10,16 @@ const Category = () => {
 
   // Show loading if categories or products not yet loaded
   if (!categories?.length || !products?.length) {
-    return <div className="category-main-content">Loading data...</div>;
+    return <div className="category-loader">
+      Loading data...
+    <span className="loader"></span></div>;
   }
 
   const categoryId = Number(id);
   const category = categories.find((cat) => cat.id === categoryId);
 
   if (!category) {
-    return <div className="category-main-content">Category not found.</div>;
+    return <div className="category-loader">Category not found.</div>;
   }
 
   // Filter products belonging to this category

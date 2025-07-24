@@ -19,7 +19,12 @@ const SingleProduct = () => {
   const { products, handleAddToCart, categories } = useContext(Context);
   const product = products.find((p) => p.id === Number(id));
 
-  if (!product) return <div>Loading product...</div>;
+  if (!product) return (
+    <div className="loading-product">
+      Loading product...
+      <span class="loader"></span>
+    </div>
+  );
 
   const imageUrl = product.image_url || "/placeholder.jpg";
   const category = categories.find((cat) => cat.id === product.category_id);
