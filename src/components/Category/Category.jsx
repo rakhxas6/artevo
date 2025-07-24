@@ -27,7 +27,7 @@ const Category = () => {
     <div className="category-main-content">
       <div className="layout">
         <div className="category-title">
-          <h2>{category.title}</h2>
+          <h2 className="section-heading">{category.title}</h2>
         </div>
         {filteredProducts.length > 0 ? (
           <Products innerPage={true} products={filteredProducts} />

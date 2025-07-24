@@ -3,7 +3,9 @@
     padding: 40px 0;
     position: relative;
     background-image: linear-gradient(to right, #8e2de2, #4a00e0);
+    height: calc(100vh - 70px);
     @include md {
+        // height: 95vh
         height: calc(100vh - 80px);
     }
     .content {
